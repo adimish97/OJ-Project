@@ -1,20 +1,28 @@
+import axios from "axios";
+
 const registerUser = async (email, password, firstname, lastname) => {
-  const res = await fetch("http://localhost:3000/register", {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify({ email, password, firstname, lastname }),
-  });
+  try {
+    const res = await axios.post(
+      "http://localhost:3000/register",
+      { email, password, firstname, lastname },
+      {
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }
+    );
 
-  const data = await res.json();
+    const data = res.data;
 
-  if (res.ok) {
     localStorage.setItem("token", data.token);
     localStorage.setItem("user", JSON.stringify(data.user));
+
     return data;
-  } else {
-    throw new Error(data.message);
+  } catch (error) {
+    const message =
+      error.response?.data?.message || "Registration failed";
+    throw new Error(message);
   }
 };
+
 export default registerUser;

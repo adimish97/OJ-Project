@@ -1,20 +1,29 @@
+import axios from "axios";
+
 const loginUser = async (email, password) => {
-  const res = await fetch("http://localhost:3000/login", {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify({ email, password }),
-  });
+  try {
+    const res = await axios.post(
+      "http://localhost:3000/login",
+      { email, password },
+      {
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }
+    );
 
-  const data = await res.json();
+    const data = res.data;
 
-  if (res.ok) {
     localStorage.setItem("token", data.token);
     localStorage.setItem("user", JSON.stringify(data.user));
+
     return data;
-  } else {
-    throw new Error(data.message);
+  } catch (error) {
+    // Axios puts server errors inside error.response
+    const message =
+      error.response?.data?.message || "Something went wrong";
+    throw new Error(message);
   }
 };
+
 export default loginUser;

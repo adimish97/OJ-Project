@@ -1,8 +1,8 @@
-import React, { useState } from 'react'
+import { useState } from 'react'
 import loginUser from './api/loginApi';
 import { useNavigate } from 'react-router-dom';
 
-const Login = () => {
+const Login = (props) => {
 
   const navigate = useNavigate();
 
@@ -15,6 +15,8 @@ const Login = () => {
     loginUser(email, password)
       .then((data) => {
         console.log("Login successful:", data);
+        props.setIsLoggedIn(true);
+        navigate("/home");
       })
       .catch((error) => {
         console.error("Login failed:", error.message);

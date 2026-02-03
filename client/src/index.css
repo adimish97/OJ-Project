@@ -1,0 +1,15 @@
+/* Global styles to account for fixed navbar */
+html, body, #root {
+	height: 100%;
+}
+
+body {
+	margin: 0;
+	padding-top: 64px; /* equal to navbar height */
+	font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial;
+}
+
+/* Optional: keep box-sizing consistent */
+*, *::before, *::after {
+	box-sizing: border-box;
+}
