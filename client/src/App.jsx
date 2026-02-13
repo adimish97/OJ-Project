@@ -1,11 +1,12 @@
 import { useEffect, useState } from 'react'
-import Login from './pages/Login2'
+import Login from './pages/Login'
 import Register from './pages/Register'
 import Home from './pages/Home'
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import Navbar from './components/Navbar';
 import axios from 'axios';
 import CreateProblem from './pages/CreateProblem';
+import ProblemSolvePage from './pages/ProblemSolvePage';
 
 function App() {
 
@@ -54,6 +55,7 @@ function App() {
           <Route index path="/login" element={<Login setIsLoggedIn={setIsLoggedIn} />} />
           <Route path="/register" element={<Register setIsLoggedIn={setIsLoggedIn} />} />
           <Route path="/create-problem" element={<CreateProblem />} />
+          <Route path="/problems/:slug" element={<ProblemSolvePage />} />
         </Routes>
       </Router>
     </>

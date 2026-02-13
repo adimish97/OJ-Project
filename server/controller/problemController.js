@@ -26,7 +26,8 @@ const createProblem = async (req, res) => {
       inputFormat,
       outputFormat,
       constraints,
-      tags
+      tags,
+      // testCases
     } = req.body;
 
     const existingProblem = await Problem.findOne({ slug });
@@ -45,6 +46,7 @@ const createProblem = async (req, res) => {
       outputFormat,
       constraints,
       tags,
+      // testCases,
       createdBy: req.user.id
     });
 

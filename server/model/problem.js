@@ -1,5 +1,20 @@
 import mongoose from 'mongoose';
 
+// const testCaseSchema = new mongoose.Schema({
+//   input: {
+//     type: String,
+//     required: true
+//   },
+//   output: {
+//     type: String,
+//     required: true
+//   },
+//   isHidden: {
+//     type: Boolean,
+//     default: true
+//   }
+// });
+
 const problemSchema = new mongoose.Schema(
   {
     title: {
@@ -60,16 +75,13 @@ const problemSchema = new mongoose.Schema(
       index: true
     },
 
+    // testCases: [testCaseSchema],
+
     createdBy: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "User",
       required: true
     }
-
-    // isPublished: {
-    //   type: Boolean,
-    //   default: false
-    // }
   },
   {
     timestamps: true
