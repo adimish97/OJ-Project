@@ -5,49 +5,84 @@ const ProblemPreview = ({ problem }) => {
     return <p className={styles.empty}>No problem data to preview</p>;
   }
 
+  const difficultyClass =
+    styles[problem.difficulty?.toLowerCase()] || styles.easy;
+
   return (
     <div className={styles.container}>
       <div className={styles.card}>
+
         {/* Header */}
         <div className={styles.header}>
           <h1 className={styles.title}>{problem.title}</h1>
-          <span className={`${styles.badge} ${styles[problem.difficulty]}`}>
+          <span className={`${styles.badge} ${difficultyClass}`}>
             {problem.difficulty}
           </span>
         </div>
 
-        {/* Meta */}
+        {/* Meta Info */}
         <div className={styles.meta}>
           <span>⏱ {problem.timeLimit} ms</span>
           <span>💾 {problem.memoryLimit} MB</span>
-          <span>🔗 {problem.slug}</span>
+          <span className={styles.slug}>🔗 {problem.slug}</span>
         </div>
 
-        {/* Sections */}
+        {/* Description */}
         <Section title="Description">
-          <p>{problem.description}</p>
+          <p className={styles.text}>
+            {problem.description?.split("\n").map((line, i) => (
+              <span key={i}>
+                {line}
+                <br />
+              </span>
+            ))}
+          </p>
         </Section>
 
+        {/* Input Format */}
         <Section title="Input Format">
-          <pre>{problem.inputFormat}</pre>
+          <pre className={styles.codeBlock}>{problem.inputFormat}</pre>
         </Section>
 
+        {/* Output Format */}
         <Section title="Output Format">
-          <pre>{problem.outputFormat}</pre>
+          <pre className={styles.codeBlock}>{problem.outputFormat}</pre>
         </Section>
 
+        {/* Constraints */}
         <Section title="Constraints">
-          <pre>{problem.constraints}</pre>
+          <pre className={styles.codeBlock}>{problem.constraints}</pre>
         </Section>
+
+        {/* Sample Test Cases */}
+        {problem.sampleTestCases?.length > 0 && (
+          <Section title="Sample Test Cases">
+            {problem.sampleTestCases.map((test, index) => (
+              <div key={index} className={styles.testCase}>
+                <h4>Example {index + 1}</h4>
+                <div className={styles.testBox}>
+                  <strong>Input:</strong>
+                  <pre>{test.input}</pre>
+                </div>
+                <div className={styles.testBox}>
+                  <strong>Output:</strong>
+                  <pre>{test.output}</pre>
+                </div>
+              </div>
+            ))}
+          </Section>
+        )}
 
         {/* Tags */}
-        <div className={styles.tags}>
-          {problem.tags?.map((tag, index) => (
-            <span key={index} className={styles.tag}>
-              {tag}
-            </span>
-          ))}
-        </div>
+        {problem.tags?.length > 0 && (
+          <div className={styles.tags}>
+            {problem.tags.map((tag) => (
+              <span key={tag} className={styles.tag}>
+                {tag}
+              </span>
+            ))}
+          </div>
+        )}
       </div>
     </div>
   );
@@ -55,7 +90,7 @@ const ProblemPreview = ({ problem }) => {
 
 const Section = ({ title, children }) => (
   <div className={styles.section}>
-    <h3>{title}</h3>
+    <h3 className={styles.sectionTitle}>{title}</h3>
     {children}
   </div>
 );

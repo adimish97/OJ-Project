@@ -16,10 +16,18 @@ const CreateProblem = () => {
     tags: ""
   });
 
+  const [sampleTestCases, setSampleTestCases] = useState([
+    { input: "", output: "" }
+  ]);
+
+  const [testCases, setTestCases] = useState([
+    { input: "", output: "" }
+  ]);
+
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
 
-  /* ---------------- AUTO SLUG GENERATION ---------------- */
+  /* ---------------- AUTO SLUG ---------------- */
   useEffect(() => {
     if (!form.title) return;
 
@@ -39,6 +47,26 @@ const CreateProblem = () => {
     setError("");
   };
 
+  /* ---------------- TEST CASE HANDLERS ---------------- */
+  const handleTestCaseChange = (index, type, field, value) => {
+    const setter = type === "sample" ? setSampleTestCases : setTestCases;
+    const list = type === "sample" ? sampleTestCases : testCases;
+
+    const updated = [...list];
+    updated[index][field] = value;
+    setter(updated);
+  };
+
+  const addTestCase = (type) => {
+    const setter = type === "sample" ? setSampleTestCases : setTestCases;
+    setter((prev) => [...prev, { input: "", output: "" }]);
+  };
+
+  const removeTestCase = (index, type) => {
+    const setter = type === "sample" ? setSampleTestCases : setTestCases;
+    setter((prev) => prev.filter((_, i) => i !== index));
+  };
+
   /* ---------------- VALIDATION ---------------- */
   const validateForm = () => {
     if (!form.title || !form.slug || !form.description) {
@@ -51,6 +79,10 @@ const CreateProblem = () => {
 
     if (form.timeLimit <= 0 || form.memoryLimit <= 0) {
       return "Time limit and memory limit must be positive numbers";
+    }
+
+    if (testCases.length === 0) {
+      return "At least one hidden test case is required";
     }
 
     return null;
@@ -70,7 +102,9 @@ const CreateProblem = () => {
       ...form,
       timeLimit: Number(form.timeLimit),
       memoryLimit: Number(form.memoryLimit),
-      tags: form.tags.split(",").map(tag => tag.trim())
+      tags: form.tags.split(",").map(tag => tag.trim()),
+      sampleTestCases,
+      testCases
     };
 
     try {
@@ -91,6 +125,12 @@ const CreateProblem = () => {
         constraints: "",
         tags: ""
       });
+      setSampleTestCases([
+        { input: "", output: "" }
+      ]);
+      setTestCases([
+        { input: "", output: "" }
+      ]);
     } catch (err) {
       setError(err.response?.data?.message || "Failed to create problem");
     } finally {
@@ -209,6 +249,61 @@ const CreateProblem = () => {
               placeholder="array, math"
             />
           </div>
+
+          {/* ---------------- SAMPLE TEST CASES ---------------- */}
+          <h3 className={styles.sectionTitle}>Sample Test Cases (Visible)</h3>
+          {sampleTestCases.map((tc, index) => (
+            <div key={index} className={styles.testCaseBox}>
+              <textarea
+                placeholder="Input"
+                value={tc.input}
+                onChange={(e) =>
+                  handleTestCaseChange(index, "sample", "input", e.target.value)
+                }
+              />
+              <textarea
+                placeholder="Output"
+                value={tc.output}
+                onChange={(e) =>
+                  handleTestCaseChange(index, "sample", "output", e.target.value)
+                }
+              />
+              <button className={styles.removeBtn} onClick={() => removeTestCase(index, "sample")}>
+                Remove
+              </button>
+            </div>
+          ))}
+          <button className={styles.addBtn} onClick={() => addTestCase("sample")}>
+            + Add Sample Test Case
+          </button>
+
+          {/* ---------------- HIDDEN TEST CASES ---------------- */}
+          <h3>Hidden Test Cases (Used for Submit)</h3>
+          {testCases.map((tc, index) => (
+            <div key={index} className={styles.testCaseBox}>
+              <textarea
+                placeholder="Input"
+                value={tc.input}
+                onChange={(e) =>
+                  handleTestCaseChange(index, "hidden", "input", e.target.value)
+                }
+              />
+              <textarea
+                placeholder="Expected Output"
+                value={tc.output}
+                onChange={(e) =>
+                  handleTestCaseChange(index, "hidden", "output", e.target.value)
+                }
+              />
+              <button className={styles.removeBtn} onClick={() => removeTestCase(index, "hidden")}>
+                Remove
+              </button>
+            </div>
+          ))}
+          <button className={styles.addBtn} onClick={() => addTestCase("hidden")}>
+            + Add Hidden Test Case
+          </button>
+
         </div>
 
         <button

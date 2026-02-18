@@ -101,3 +101,80 @@
   background-color: #9ca3af;
   cursor: not-allowed;
 }
+
+/* ---------------- TEST CASE SECTIONS ---------------- */
+
+.sectionTitle {
+  margin-top: 30px;
+  font-size: 18px;
+  font-weight: 600;
+  color: #e2e8f0;
+}
+
+/* Individual test case box */
+
+.testCaseBox {
+  background: #1e293b;
+  padding: 14px;
+  border-radius: 10px;
+  margin-top: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  border: 1px solid #334155;
+}
+
+/* Testcase textareas */
+
+.testCaseBox textarea {
+  background: #020617;
+  border: 1px solid #334155;
+  padding: 10px;
+  border-radius: 6px;
+  color: white;
+  font-family: monospace;
+  font-size: 13px;
+  resize: vertical;
+  min-height: 80px;
+}
+
+.testCaseBox textarea:focus {
+  border-color: #3b82f6;
+}
+
+/* Remove button */
+
+.removeBtn {
+  align-self: flex-end;
+  background: #ef4444;
+  border: none;
+  padding: 6px 10px;
+  border-radius: 6px;
+  font-size: 12px;
+  color: white;
+  cursor: pointer;
+  transition: 0.2s ease;
+}
+
+.removeBtn:hover {
+  background: #dc2626;
+}
+
+/* Add button */
+
+.addBtn {
+  margin-top: 10px;
+  background: #3b82f6;
+  border: none;
+  padding: 8px 14px;
+  border-radius: 6px;
+  font-size: 13px;
+  font-weight: 500;
+  color: white;
+  cursor: pointer;
+  transition: 0.2s ease;
+}
+
+.addBtn:hover {
+  background: #2563eb;
+}

@@ -1,11 +1,10 @@
 import Problem from "../model/problem.js";
-// import bcrypt from "bcryptjs";
-// import jwt from "jsonwebtoken";
 
 const getProblems = async (req, res) => {
   try {
-    // Fetch problems from the database
-    const problems = await Problem.find({}); // Assuming Problem is a Mongoose model
+    const problems = await Problem.find({})
+      .select("-testCases"); // hide hidden test cases in list view
+
     res.status(200).json(problems);
   } catch (error) {
     res.status(500).json({ message: "Server error" });
@@ -13,8 +12,6 @@ const getProblems = async (req, res) => {
 };
 
 const createProblem = async (req, res) => {
-  // res.send('Register Page');
-
   try {
     const {
       title,
@@ -27,12 +24,28 @@ const createProblem = async (req, res) => {
       outputFormat,
       constraints,
       tags,
-      // testCases
+      sampleTestCases,
+      testCases
     } = req.body;
+
+    // 🔍 Basic validation
+    if (!title || !slug || !description || !difficulty) {
+      return res.status(400).json({
+        message: "Required fields missing"
+      });
+    }
+
+    if (!testCases || testCases.length === 0) {
+      return res.status(400).json({
+        message: "At least one hidden test case is required"
+      });
+    }
 
     const existingProblem = await Problem.findOne({ slug });
     if (existingProblem) {
-      return res.status(400).json({ message: "Problem with this slug already exists" });
+      return res.status(400).json({
+        message: "Problem with this slug already exists"
+      });
     }
 
     const problem = await Problem.create({
@@ -46,24 +59,32 @@ const createProblem = async (req, res) => {
       outputFormat,
       constraints,
       tags,
-      // testCases,
+      sampleTestCases: sampleTestCases || [],
+      testCases,
       createdBy: req.user.id
     });
 
     res.status(201).json({
+      success: true,
       message: "Problem created successfully",
       problem
     });
+
   } catch (error) {
-    res.status(500).json({ message: error.message });
+    res.status(500).json({
+      success: false,
+      message: error.message
+    });
   }
-}
+};
 
 const getProblemBySlug = async (req, res) => {
   try {
     const { slug } = req.params;
 
-    const problem = await Problem.findOne({ slug });
+    // ❗ Hide hidden test cases when returning to frontend
+    const problem = await Problem.findOne({ slug })
+      .select("-testCases");
 
     if (!problem) {
       return res.status(404).json({
@@ -76,6 +97,7 @@ const getProblemBySlug = async (req, res) => {
       success: true,
       data: problem
     });
+
   } catch (error) {
     res.status(500).json({
       success: false,
@@ -84,6 +106,5 @@ const getProblemBySlug = async (req, res) => {
     });
   }
 };
-
 
 export { getProblems, createProblem, getProblemBySlug };

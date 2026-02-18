@@ -1,20 +1,5 @@
 import mongoose from 'mongoose';
 
-// const testCaseSchema = new mongoose.Schema({
-//   input: {
-//     type: String,
-//     required: true
-//   },
-//   output: {
-//     type: String,
-//     required: true
-//   },
-//   isHidden: {
-//     type: Boolean,
-//     default: true
-//   }
-// });
-
 const problemSchema = new mongoose.Schema(
   {
     title: {
@@ -75,7 +60,32 @@ const problemSchema = new mongoose.Schema(
       index: true
     },
 
-    // testCases: [testCaseSchema],
+    sampleTestCases: [
+      {
+        input: {
+          type: String,
+          required: true
+        },
+        output: {
+          type: String,
+          required: true
+        }
+      }
+    ],
+
+    // Hidden test cases (used for submit verdict)
+    testCases: [
+      {
+        input: {
+          type: String,
+          required: true
+        },
+        output: {
+          type: String,
+          required: true
+        }
+      }
+    ],
 
     createdBy: {
       type: mongoose.Schema.Types.ObjectId,
