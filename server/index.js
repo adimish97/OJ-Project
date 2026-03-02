@@ -4,6 +4,7 @@ import "dotenv/config";
 import routes from "./routes/authRoutes.js";
 import problemRoutes from "./routes/problemRoutes.js";
 import compilerRoutes from "./routes/compilerRoute.js";
+import submitRoutes from "./routes/submitRoute.js";
 import connectDB from "./database/db.js";
 import cron from "node-cron";
 import cleanupOldFiles from "./utils/cleanup.js";
@@ -17,6 +18,7 @@ app.use(cors());
 app.use("/", routes);
 app.use("/problems", problemRoutes);
 app.use("/run", compilerRoutes);
+app.use("/submit", submitRoutes);
 
 // Run every 10 minutes
 cron.schedule("*/60 * * * *", () => {

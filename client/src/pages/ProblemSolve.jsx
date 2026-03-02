@@ -3,6 +3,8 @@ import styles from "./ProblemSolve.module.css";
 import ProblemPreview from "./ProblemPreview";
 import handleRunApi from "../components/api/compilerApi";
 import Editor from "@monaco-editor/react";
+import axios from "axios";
+import handleSubmitApi from "../components/api/submitApi";
 
 const ProblemSolve = ({ problem }) => {
 
@@ -50,29 +52,23 @@ const ProblemSolve = ({ problem }) => {
   };
 
   const handleSubmit = async () => {
-    // try {
-    //   setSubmitting(true);
-    //   setOutput("");
-    //   setError("");
+    try {
+      setSubmitting(true);
+      setOutput("");
+      setError("");
 
-    //   const res = await axios.post(
-    //     `http://localhost:3000/submit/${problem.slug}`,
-    //     {
-    //       code,
-    //       language
-    //     }
-    //   );
+      const res = await handleSubmitApi(language, code, problem.slug);
 
-    //   console.log(res.data);
-    //   setOutput(res.data);
+      console.log(res);
+      setOutput(res.passed);
 
-    // } catch (err) {
-    //   setError(
-    //     err.response?.data?.message || "Error while executing code"
-    //   );
-    // } finally {
-    //   setSubmitting(false);
-    // }
+    } catch (err) {
+      setError(
+        err.response?.data?.message || "Error while executing code"
+      );
+    } finally {
+      setSubmitting(false);
+    }
   };
 
 
